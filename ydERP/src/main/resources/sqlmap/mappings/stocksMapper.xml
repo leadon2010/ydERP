@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="stocks">
+
+	<!-- 판매 내역 전체 조회 -->
+	<select id="getStockInOutList" resultType="stockin">
+		<![CDATA[
+		SELECT *
+		FROM   stock_in_out_vo
+		]]>
+		<where>
+			<if test="itemCode != null and itemCode != '' ">
+				AND item_code like '%'||#{itemCode}||'%'
+			</if>
+			<if test="itemName != null and itemName != '' ">
+				AND item_name like '%'||#{itemName}||'%'
+			</if>
+			<if test="poSoNumber != null and poSoNumber != '' ">
+				AND dealer_code like '%'||#{poSoNumber}||'%'
+			</if>
+			<if test="fromDate != null and fromDate != '' ">
+				<![CDATA[
+				AND txn_date >= TO_DATE(#{fromDate},'rrrr-mm-dd')
+				]]>
+			</if>
+			<if test="toDate != null and toDate != '' ">
+				<![CDATA[
+				AND txn_date <= TO_DATE(#{toDate},'rrrr-mm-dd')
+				]]>
+			</if>
+			<if test="fromDate == null or fromDate == '' ">
+				<![CDATA[
+				AND txn_date >= TRUNC(SYSDATE)
+				]]>
+			</if>
+		</where>
+		ORDER BY txn_date DESC
+	</select>
+
+	<select id="getItemInOutList" resultType="stockin">
+		<![CDATA[
+		SELECT *
+		FROM stock_in_out_vo
+		]]>
+		<where>
+			<if test="itemCode != null">
+				AND item_code = #{itemCode}
+			</if>
+			<if test="txnDate != null">
+				AND TO_CHAR(txn_date,'rrrr/mm/dd') = #{txnDate}
+			</if>
+		</where>
+		ORDER BY txn_date
+	</select>
+
+	<select id="getStockOnhandList" resultType="com.yedam.erp.stocks.StockOnhandViewVO">
+		<![CDATA[
+		SELECT v.*, common.get_vendor_name(v.vendor_code) vendor_name
+		FROM   stock_onhands_vo v
+		]]>
+		<where>
+			<if test="itemCode != null and itemCode != '' ">
+				AND item_code like '%'||#{itemCode}||'%'
+			</if>
+			<if test="itemName != null and itemName != '' ">
+				AND item_name like '%'||#{itemName}||'%'
+			</if>
+			<if test="vendorCode != null and vendorCode != '' ">
+				AND vendor_code like #{vendorCode}||'%'
+			</if>
+			<if test="group1 != null and group1 != '' ">
+				AND SUBSTR(item_code,1,1) = #{group1}
+			</if>
+			<if test="group2 != null and group2 != '' ">
+				AND SUBSTR(item_code,2,1) = #{group2}
+			</if>
+			<if test="group3 != null and group3 != '' ">
+				AND SUBSTR(item_code,3,1) = #{group3}
+			</if>
+			<if test="zeroFlag != null and zeroFlag != '' ">
+				AND (DECODE(NVL(onhand_qty,0),0,'Y','N') = #{zeroFlag})
+			</if>
+		</where>
+		ORDER BY item_code
+	</select>
+
+	<select id="getPurchaseRequestList" resultType="purchaserequest">
+		<![CDATA[
+		select a.* from ( select rownum rn, b.* from (
+		SELECT common.get_vendor_name(v.vendor_code) vendor_name, v.*
+		FROM   purchase_request_vo v
+		]]>
+		<where>
+			<if test=" group1 != null and group1 != '' ">
+				AND SUBSTR(item_code,1,1) = #{group1}
+			</if>
+			<if test=" group2 != null and group2 != '' ">
+				AND SUBSTR(item_code,2,1) = #{group2}
+			</if>
+			<if test=" group3 != null and group3 != '' ">
+				AND SUBSTR(item_code,3,1) = #{group3}
+			</if>
+			<if test=" vendorCode != null and vendorCode != '' ">
+				AND vendor_code = #{vendorCode}
+			</if>
+			<if test=" itemCode != null and itemCode != '' ">
+				AND item_code LIKE '%' || #{itemCode} || '%'
+			</if>
+			<if test=" itemName != null and itemName != '' ">
+				AND item_name LIKE '%' || #{itemName} || '%'
+			</if>
+		</where>
+		ORDER BY vendor_code, item_code
+		) b ) a where rn between #{first} and
+		#{last}
+	</select>
+
+	<select id="getCount" parameterType="purchaserequest"
+		resultType="int">
+		<![CDATA[
+		SELECT count(*) cnt
+		FROM   purchase_request_vo v
+		]]>
+		<where>
+			<if test=" group1 != null and group1 != '' ">
+				AND SUBSTR(item_code,1,1) = #{group1}
+			</if>
+			<if test=" group2 != null and group2 != '' ">
+				AND SUBSTR(item_code,2,1) = #{group2}
+			</if>
+			<if test=" group3 != null and group3 != '' ">
+				AND SUBSTR(item_code,3,1) = #{group3}
+			</if>
+			<if test=" vendorCode != null and vendorCode != '' ">
+				AND vendor_code = #{vendorCode}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insertPurchaseProc" parameterType="purchaserequest"
+		statementType="CALLABLE">
+		<![CDATA[
+		{call common.in_txn(#{pTxnNo})}
+		]]>
+	</insert>
+
+	<insert id="insertPurchaseRequest" parameterType="purchaserequest"
+		statementType="CALLABLE">
+		<![CDATA[
+		{call common.create_purchase_info(#{pMsg ,mode=OUT,jdbcType=VARCHAR,javaType=String})}
+		]]>
+	</insert>
+
+	<select id="getPurchaseRequestTempListData" resultType="com.yedam.erp.stocks.PurchaseDetailTempVO">
+		<![CDATA[
+		SELECT *
+		FROM   purchase_detail_temp_vo v
+		ORDER BY vendor_code, item_code
+		]]>
+	</select>
+
+	<insert id="insertPurchaseRequestTemp" parameterType="com.yedam.erp.stocks.PurchaseDetailTempVO">
+		<![CDATA[
+		INSERT INTO purchase_detail_temp
+		VALUES  (TO_CHAR(purchase_detail_seq.nextval)
+			    ,'TEMP Master'
+			    ,#{vendorCode}
+			    ,#{itemCode}
+			    ,#{reqQty}
+			    ,#{supplyPrice}
+			    ,#{itemTax}
+			    )
+		]]>
+	</insert>
+
+	<select id="getlookUpValueList" resultType="map">
+		<![CDATA[
+		SELECT lv.lookup_code
+		      ,lv.lookup_values
+		FROM   lookups lk
+		JOIN   lookup_values lv
+		ON     lk.lookup = lv.lookup
+		WHERE  lk.lookup = 'SUBINVENTORY'
+		]]>
+	</select>
+
+	<select id="getVendorList" resultType="map">
+		<![CDATA[
+		SELECT vendor_code
+		      ,vendor_name
+		FROM   vendors
+		ORDER  BY vendor_name
+		]]>
+	</select>
+
+	<select id="getReceiptHeaders" resultType="com.yedam.erp.stocks.PurchaseHeadersVO">
+		<![CDATA[
+		SELECT p.*
+		      ,common.get_vendor_name(p.vendor_code) vendor_name
+		FROM   purchases p
+		WHERE  1 = 1
+		AND    NVL(in_flag
+		          ,'N') = 'N'
+		OR     (NVL(in_flag
+		           ,'N') = 'Y' AND EXISTS
+		       (SELECT 1
+		         FROM   purchase_details pd
+		         WHERE  1 = 1
+		         AND    p.purchase_code = pd.purchase_code
+		         AND    NVL(pd.incoming_flag
+		                   ,'N') = 'N'))
+		ORDER  BY purchase_code DESC
+		]]>
+	</select>
+
+	<select id="getReceiptLines" resultType="com.yedam.erp.stocks.PurchaseDetailsVO">
+		<![CDATA[
+		SELECT p.*, common.get_item_name(p.purchase_item) item_name
+		FROM   purchase_details p
+		]]>
+		<where>
+			<if test="purchaseCode != null">
+				<![CDATA[
+				AND purchase_code = #{purchaseCode}
+				AND NVL(p.incoming_flag, 'N') = 'Y'
+				AND NOT EXISTS
+					(SELECT 1
+					FROM
+					stocks_in_out s
+					WHERE s.dealer_code = p.purchase_code
+					AND s.item_code = p.purchase_item)
+				]]>
+			</if>
+		</where>
+		ORDER BY purchase_detail_code
+	</select>
+
+	<select id="getMostSoldItem" resultType="map">
+		<![CDATA[
+		SELECT itm.item_name
+		      ,quantity
+		FROM   (SELECT st.item_code item
+		              ,TO_CHAR(SUM(st.out_qty)) quantity
+		        FROM   stocks_in_out st
+		        GROUP  BY st.item_code
+		        ORDER  BY quantity DESC) a
+		      ,items itm
+		WHERE  a.item = itm.item_code
+		AND    ROWNUM <= 5		
+		]]>
+	</select>
+
+	<select id="getMostBuyItem" resultType="map">
+		<![CDATA[
+		SELECT itm.item_name
+		      ,quantity
+		FROM   (SELECT st.item_code item
+		              ,TO_CHAR(SUM(st.in_qty)) quantity
+		        FROM   stocks_in_out st
+		        GROUP  BY st.item_code
+		        ORDER  BY quantity DESC) a
+		      ,items itm
+		WHERE  a.item = itm.item_code
+		AND    ROWNUM <= 5		
+		]]>
+	</select>
+
+	<select id="getInOutQtyChart" resultType="map">
+		<![CDATA[
+		SELECT TO_CHAR(v.txn_date
+	              ,'rr/mm/dd') in_out_day
+		      ,SUM(v.in_qty) in_qty
+		      ,SUM(v.out_qty) out_qty
+		FROM   stock_in_out_vo v
+		WHERE  v.txn_date >= SYSDATE - 7
+		GROUP  BY TO_CHAR(v.txn_date
+		                 ,'rr/mm/dd')
+		ORDER  BY TO_CHAR(v.txn_date
+		                 ,'rr/mm/dd')
+		]]>
+	</select>
+
+	<select id="getInOutAmtChart" resultType="map">
+		<![CDATA[
+		SELECT in_out_day
+		      ,SUM(sale_amt) sale_amt
+		      ,SUM(purchase_amt) purchase_amt
+		      ,SUM(sale_amt) - SUM(purchase_amt) var_amt
+		FROM   (SELECT TO_CHAR(sio.txn_date
+		                      ,'rr/mm/dd') in_out_day
+		              ,0 sale_amt
+		              ,SUM(sio.in_qty * pd.purchase_price) purchase_amt
+		        FROM   stocks_in_out sio
+		        JOIN   purchase_details pd
+		        ON     sio.dealer_code = pd.purchase_code
+		        AND    sio.item_code = pd.purchase_item
+		        WHERE  sio.txn_date >= SYSDATE - 7
+		        GROUP  BY TO_CHAR(sio.txn_date
+		                         ,'rr/mm/dd')
+		        UNION ALL
+		        SELECT TO_CHAR(sio.txn_date
+		                      ,'rr/mm/dd') in_out_day
+		              ,SUM(sio.out_qty * NVL(sd.sale_price
+		                                    ,0)) sale_amt
+		              ,0 purchase_amt
+		        FROM   stocks_in_out sio
+		        JOIN   sale_details sd
+		        ON     sio.dealer_code = sd.sale_code
+		        AND    sio.item_code = sd.sale_item_code
+		        WHERE  sio.txn_date >= SYSDATE - 7
+		        GROUP  BY TO_CHAR(sio.txn_date
+		                         ,'rr/mm/dd'))
+		GROUP  BY in_out_day
+		ORDER  BY in_out_day	
+		]]>
+	</select>
+
+	<select id="getLookupsData" parameterType="string" resultType="map">
+		<![CDATA[
+		SELECT lk.lookup lookups
+		      ,lk.lookup_description
+		      ,lv.lookup
+		      ,lv.lookup_code
+		      ,lv.lookup_values
+		      ,lv.descriptions
+		      ,lv.flag
+		      ,lv.dff
+		      ,lv.reflag
+		      ,lv.lookup_idx
+		FROM   lookups lk
+		JOIN   lookup_values lv
+		ON     lk.lookup = lv.lookup
+        ]]>
+		<where>
+			<if test=" _parameter != null and _parameter != '' ">
+				AND lk.lookup = #{_parameter}
+			</if>
+		</where>
+		ORDER BY lk.lookup
+		,lv.lookup_code
+	</select>
+
+	<select id="getLookupsData2" parameterType="com.yedam.erp.stocks.LookupCodesVO"
+		resultType="map">
+		<![CDATA[
+		SELECT lk.lookup lookups
+		      ,lk.lookup_description
+		      ,lv.lookup
+		      ,lv.lookup_code
+		      ,lv.lookup_values
+		      ,lv.descriptions
+		      ,lv.flag
+		      ,lv.dff
+		      ,lv.reflag
+		      ,lv.lookup_idx
+		FROM   lookups lk
+		JOIN   lookup_values lv
+		ON     lk.lookup = lv.lookup
+        ]]>
+		<where>
+			<if test=" lookup != null and lookup != '' ">
+				AND lk.lookup = #{lookup}
+			</if>
+		</where>
+		ORDER BY lk.lookup
+		,lv.lookup_code
+	</select>
+
+	<select id="getLookupValues" resultType="map">
+		<![CDATA[
+		SELECT l.lookup
+		      ,l.lookup_description
+		FROM   lookups l
+		ORDER BY lookup
+        ]]>
+	</select>
+
+
+	<select id="selectLookups" parameterType="string" resultType="map">
+		<![CDATA[
+		SELECT v.lookup
+		      ,v.lookup_code
+		      ,v.lookup_values
+		      ,v.descriptions
+		      ,v.flag
+		      ,v.dff
+		      ,v.reflag
+		      ,v.lookup_idx
+		FROM   lookup_values v
+		WHERE v.lookup = #{lookup}
+        ]]>
+	</select>
+
+	<!-- 1.homecontroll lookup -->
+	<update id="updateLookup" parameterType="com.yedam.erp.stocks.LookupCodesVO">
+		<![CDATA[
+		UPDATE lookup_values
+		SET    lookup_values = #{lookupValues}
+		      ,descriptions  = #{descriptions}
+		      ,flag          = #{flag}
+		      ,dff           = #{dff}
+		      ,reflag        = #{reflag}
+		WHERE  lookup_idx = #{lookupIdx}
+        ]]>
+	</update>
+
+	<update id="updateLookup2" parameterType="map">
+		<![CDATA[
+		UPDATE lookup_values
+		SET    lookup_values = #{LOOKUP_VALUES}
+		      ,descriptions  = #{DESCRIPTIONS}
+		      ,flag          = #{FLAG}
+		      ,dff           = #{DFF}
+		      ,reflag        = #{REFLAG}
+		WHERE  lookup_idx = #{id}
+        ]]>
+	</update>
+
+	<select id="getItemGroup1" resultType="map">
+		<![CDATA[
+		SELECT lv.descriptions "grp_name"
+		      ,lv.lookup_code  "grp_code"
+		FROM   lookups       lk
+		      ,lookup_values lv
+		WHERE  lk.lookup = lv.lookup
+		AND    lk.lookup = 'ITEM_GROUP1'
+		ORDER BY lv.descriptions
+		]]>
+	</select>
+
+	<select id="getItemGroup2" parameterType="string" resultType="map">
+		<![CDATA[
+		SELECT lv.descriptions "grp_name"
+		      ,lv.lookup_code  "grp_code"
+		FROM   lookups       lk
+		      ,lookup_values lv
+		WHERE  lk.lookup = lv.lookup
+		AND    lk.lookup = 'ITEM_GROUP2'
+		]]>
+		<if test=" _parameter != null and _parameter != '' ">
+			AND lv.dff = #{_parameter}
+		</if>
+		<![CDATA[
+		ORDER BY lv.descriptions
+		]]>
+	</select>
+
+	<select id="getItemGroup3" parameterType="string" resultType="map">
+		<![CDATA[
+		SELECT lv.descriptions "grp_name"
+		      ,lv.lookup_code  "grp_code"
+		FROM   lookups       lk
+		      ,lookup_values lv
+		WHERE  lk.lookup = lv.lookup
+		AND    lk.lookup = 'ITEM_GROUP3'
+		]]>
+		<if test=" _parameter != null and _parameter != '' ">
+			AND lv.dff = #{_parameter}
+		</if>
+		<![CDATA[
+		ORDER BY lv.descriptions
+		]]>
+	</select>
+
+	<select id="getSalesRequest" resultType="purchaserequest">
+		<![CDATA[
+		SELECT a.customer_code
+		      ,a.customer_name
+		      ,TO_CHAR(a.need_date
+		              ,'rrrr/mm/dd') need_date
+		      ,SUM(a.request_qty) request_qty
+		      ,SUM(a.selling_price * a.request_qty) selling_price
+		FROM   sales_temp_vo a
+		GROUP  BY a.customer_code
+		         ,a.customer_name
+		         ,TO_CHAR(a.need_date
+		                 ,'rrrr/mm/dd')
+		]]>
+	</select>
+
+
+	<select id="getSalesRequestDetail" resultType="purchaserequest">
+		<![CDATA[
+			SELECT *
+			FROM   sales_temp_vo
+			WHERE  customer_code = #{customerCode}
+			AND    TO_CHAR(need_date, 'rrrr/mm/dd') = #{needDate}
+		]]>
+	</select>
+
+	<insert id="insertSalesProc" parameterType="purchaserequest"
+		statementType="CALLABLE">
+		<![CDATA[
+		{call common.create_sales_order(#{pVendorCode}, #{pMsg ,mode=OUT,jdbcType=VARCHAR,javaType=String})}
+		]]>
+	</insert>
+
+	<select id="getTitle1" resultType="com.yedam.erp.stocks.LookupCodesVO">
+		<![CDATA[
+		SELECT '판매주문요청승인건' title
+		      ,'판매주문요청승인' detail_view
+		      ,TO_CHAR(COUNT(*)) cnt
+		      ,1 ord
+		FROM   (SELECT t.customer_code
+		              ,TO_CHAR(t.need_date
+		                      ,'rrrrmmdd')
+		        FROM   sales_temp t
+		        GROUP  BY t.customer_code
+		                 ,TO_CHAR(t.need_date
+		                         ,'rrrrmmdd'))
+		UNION ALL
+		SELECT '구매요청승인건' title
+		      ,'구매요청승인' detail_view
+		      ,TO_CHAR(COUNT(*)) cnt
+		      ,2 ord
+		FROM   purchase_detail_temp_vo v
+		UNION ALL
+		SELECT '구매입고처리건' title
+		      ,'구매입고처리' detail_view
+		      ,TO_CHAR(COUNT(*)) cnt
+		      ,3 ord
+		FROM   purchases p
+		WHERE  1 = 1
+		AND    NVL(in_flag
+		          ,'N') = 'N'
+		OR     (NVL(in_flag
+		           ,'N') = 'Y' AND EXISTS
+		       (SELECT 1
+		         FROM   purchase_details pd
+		         WHERE  1 = 1
+		         AND    p.purchase_code = pd.purchase_code
+		         AND    NVL(pd.incoming_flag
+		                   ,'N') = 'N'))
+		UNION ALL
+		SELECT '판매주문출하승인건' title
+		      ,'주문내역' detail_view
+		      ,TO_CHAR(COUNT(*)) cnt
+		      ,4 ord
+		FROM   sales s
+		JOIN   customers c
+		ON     s.customer_code = c.customer_code
+		WHERE  order_permit = 'N'
+		ORDER BY ord
+		]]>
+	</select>
+
+
+</mapper>

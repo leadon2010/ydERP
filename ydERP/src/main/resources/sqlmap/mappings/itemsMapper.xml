@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="items">
+
+	<!-- 여기서부터 기초 품목 관리 -->
+	<select id="getItemsList" resultType="items">
+		SELECT i.item_code
+			,i.item_name
+			,i.uom
+			,i.in_qty
+			,i.min_qty
+			,i.supply_price
+			,i.selling_price
+			,i.item_tax
+			,i.expire_date
+			,i.vendor_code
+			,common.get_vendor_name(i.vendor_code) vendor_name
+			,i.add_date
+		FROM items i
+		<where>
+			<if test="pGroup1 != null and pGroup1 != '' ">
+				AND    SUBSTR(item_code, 1, 1) = #{pGroup1}
+			</if>
+			<if test="pGroup2 != null and pGroup2 != '' ">
+				AND    SUBSTR(item_code, 2, 1) = #{pGroup2}
+			</if>
+			<if test="pGroup3 != null and pGroup3 != '' ">
+				AND    SUBSTR(item_code, 3, 1) = #{pGroup3}
+			</if>
+		</where>
+		ORDER BY add_date DESC
+	</select>
+	<!-- -->
+	<select id="getItems" parameterType="items" resultType="com.yedam.erp.items.Sales_tempVO">
+		<![CDATA[
+		SELECT * FROM items 
+		]]>
+	</select>
+	<!-- -->
+	<select id="getCount" resultType="int" parameterType="items">
+		SELECT Count(*) FROM items
+		<where>
+			<if test="item_code != null and item_code != '' ">
+				<if test="item_code == 'item_code' ">
+					AND searchCondition like '%' || #{item_code} || '%'
+				</if>
+				<if test="item_name == 'item_name' ">
+					AND searchCondition like '%' || #{item_name} || '%'
+				</if>
+			</if>
+		</where>
+	</select>
+	<!-- -->
+
+	<!-- 구매업체 코드 및 이름 조회 -->
+	<select id="getVendorList2" resultType="com.yedam.erp.items.ItemsVO">
+		SELECT vendor_code,
+			   vendor_name
+		FROM vendors
+		WHERE use_flag = 'Y'
+	</select>
+	<!-- 판매업체의 구매신청시, 중분류 구분값 -->
+	<select id="getItemGroup2" parameterType="com.yedam.erp.items.ItemsVO" resultType="com.yedam.erp.items.ItemsVO">
+		<![CDATA[
+		SELECT v.lookup_code
+		      ,v.lookup_values||'('||v.lookup_code||')' lookup_values
+		FROM   item_group2_v v
+		WHERE  v.dff = #{lookupCode}
+		ORDER  BY 1
+		]]>
+	</select>
+
+	<!-- 판매업체의 구매신청시, 소분류 구분값 -->
+	<select id="getItemGroup3" parameterType="com.yedam.erp.items.ItemsVO" resultType="com.yedam.erp.items.ItemsVO">
+		<![CDATA[
+		SELECT v.lookup_code
+		      ,v.lookup_values||'('||v.lookup_code||')' lookup_values
+		FROM   item_group3_v v
+		WHERE  v.dff = #{lookupCode}
+		ORDER  BY 1
+		]]>
+	</select>
+
+	<!-- 판매업체가 구매신청할때 품목명을 클릭하면 해당 품목의 UOM VALUE를 불러오게 하는 쿼리  -->
+	<select id="getUom" parameterType="com.yedam.erp.items.ItemsVO" resultType="com.yedam.erp.items.ItemsVO">
+		<![CDATA[
+		SELECT v.lookup_code
+		      ,v.lookup_values
+		FROM   lookups       l
+		      ,lookup_values v
+		WHERE  l.lookup = v.lookup
+		AND    l.lookup = 'UOM'
+		AND    v.lookup_code = #{uom}
+		]]>
+	</select>
+
+	<!-- 기초품목 등록  -->
+	<insert id="insertItems" parameterType="items" statementType="CALLABLE">
+		<![CDATA[
+		{call items_ins_proc( #{pGroup1}    
+                             ,#{pGroup2}      
+                             ,#{pGroup3}      
+                             ,#{itemName}     
+                             ,#{uom}        
+                             ,#{inQty}       
+                             ,#{supplyPrice}  
+                             ,#{sellingPrice} 
+                             ,#{itemTax}       
+                             ,#{expireDate}
+                             ,#{vendorName}  
+                             ,#{minQty}
+                             ,sysdate     
+                             ,#{msg, mode=OUT, jdbcType=VARCHAR, javaType=string}          
+						
+		)}
+		]]>
+	</insert>
+	<!-- 기초품목 수정 -->
+	<update id="updateItems" parameterType="items">
+		<![CDATA[
+		UPDATE items
+		SET   item_name = #{itemName}
+		      ,uom  = #{uom}
+		      ,in_qty = #{inQty}
+		      ,supply_price  = #{supplyPrice}
+		      ,selling_price = #{sellingPrice}
+		      ,item_tax  = #{itemTax}
+		      ,expire_date = #{expireDate}
+		      ,vendor_code  = #{vendorName}
+		      ,min_qty = #{minQty}
+		WHERE  item_code = #{itemCode}
+		]]>
+	</update>
+	<!-- 기초품목 삭제 -->
+	<delete id="deleteItems" parameterType="items">
+
+		DELETE items
+		WHERE
+		item_code = #{itemCode}
+
+	</delete>
+	<!-- -->
+	<delete id="deleteItemsList" parameterType="list">
+		DELETE items
+		WHERE item_code IN
+		<foreach item="item" collection="list" open="(" separator=","
+			close=")">
+			#{items}
+		</foreach>
+	</delete>
+	<!-- 기초 품목 관리의 끝 -->
+
+	<!-- 여기서부터 구매 업체 관리 -->
+	<select id="getVendorList" resultType="com.yedam.erp.items.VendorVO">
+		<![CDATA[
+		
+		SELECT vendor_code
+		      ,vendor_name
+		      ,vendor_owner
+		      ,vendor_loc
+		      ,vendor_phone
+		      ,vendor_bank
+		      ,vendor_account
+		      ,vendor_bankowner
+		      ,use_flag 
+		      ,loc_addr		      
+		FROM  vendors
+		ORDER BY vendor_code DESC
+		]]>
+	</select>
+
+	<!-- JqGrid 클릭 이벤트시 가져올 구매업체 한 개의 정보 -->
+	<select id="getVendor" resultType="com.yedam.erp.items.VendorVO">
+
+		SELECT vendor_code
+			,vendor_name
+			,vendor_owner
+			,vendor_loc
+			,vendor_phone
+			,vendor_bank
+			,vendor_account
+			,vendor_bankowner
+			,loc_addr
+		FROM vendors
+		WHERE vendor_code = #{vendorCode}
+
+	</select>
+
+	<!-- 구매업체 가입 -->
+	<insert id="insertVendor" parameterType="com.yedam.erp.items.VendorVO">
+		<![CDATA[
+		insert into vendors (vendor_code, vendor_name, vendor_owner,loc_addr,
+							   vendor_loc, vendor_phone, vendor_bank, vendor_account, vendor_bankowner, use_flag) 
+				      values (#{vendorCode}    
+                          	 ,#{vendorName}      
+                             ,#{vendorOwner}      
+                             ,#{locAddr}
+                             ,#{vendorLoc}     
+                             ,#{vendorPhone}
+                             ,#{vendorBank}     
+                             ,#{vendorAccount}
+                             ,#{vendorBankowner}         
+                             ,'Y')
+		
+		]]>
+	</insert>
+
+	<!-- 구매업체 수정 -->
+	<update id="updateVendor" parameterType="com.yedam.erp.items.VendorVO">
+
+		UPDATE vendors
+		SET vendor_owner = #{vendorOwner}
+			,vendor_loc = #{vendorLoc}
+			,loc_addr = #{locAddr}
+			,vendor_phone = #{vendorPhone}
+			,vendor_bank = #{vendorBank}
+			,vendor_account = #{vendorAccount}
+			,vendor_bankowner = #{vendorBankowner}
+			,use_flag = #{useFlag}
+		WHERE vendor_code = #{vendorCode}
+
+	</update>
+
+	<!-- 구매 업체 delete (거래 'N' 처리) -->
+	<update id="deleteVendor" parameterType="com.yedam.erp.items.VendorVO">
+
+		UPDATE vendors
+		SET
+		use_flag = 'N'
+		WHERE vendor_code = #{vendorCode}
+
+	</update>
+
+	<!-- 구매 업체 관리의 끝 -->
+
+	<!-- 여기서부터 판매업체관리 -->
+	<select id="getCustomerList" resultType="com.yedam.erp.items.CustomerVO">
+		<![CDATA[
+		
+		SELECT customer_code
+		      ,customer_name
+		      ,customer_owner
+		      ,customer_loc
+		      ,customer_phone
+		      ,customer_bank
+		      ,customer_account
+		      ,customer_bankowner
+		      ,loc_addr
+		      ,use_flag
+		FROM  customers
+		ORDER BY customer_code DESC
+		]]>
+	</select>
+
+	<!-- JqGrid 클릭 이벤트시 가져올 판매업체 한 개의 정보 -->
+	<select id="getCustomer" resultType="com.yedam.erp.items.CustomerVO">
+
+		SELECT customer_code
+			,customer_name
+			,customer_owner
+			,customer_loc
+			,customer_phone
+			,customer_pw
+			,customer_bank
+			,customer_account
+			,customer_bankowner
+			,loc_addr
+			,use_flag
+		FROM customers
+		WHERE customer_code = #{customerCode}
+
+	</select>
+
+	<!-- 판매업체 가입 -->
+	<insert id="insertCustomer" parameterType="com.yedam.erp.items.CustomerVO">
+		<![CDATA[
+		insert into customers (customer_code, customer_name, customer_owner, loc_addr,
+							   customer_loc, customer_phone, customer_pw, customer_bank, customer_account, customer_bankowner, use_flag) 
+				      values (#{customerCode}    
+                          	 ,#{customerName}      
+                             ,#{customerOwner}      
+                             ,#{locAddr}
+                             ,#{customerLoc}     
+                             ,#{customerPhone}
+                             ,#{customerPw}
+                             ,#{customerBank}     
+                             ,#{customerAccount}
+                             ,#{customerBankowner}         
+                             ,'Y')
+		
+		]]>
+	</insert>
+
+	<!-- 판매업체 수정 -->
+	<update id="updateCustomer" parameterType="com.yedam.erp.items.CustomerVO">
+
+		UPDATE customers
+		SET customer_owner = #{customerOwner}
+			,customer_loc = #{customerLoc}
+			,customer_phone = #{customerPhone}
+			,customer_pw = #{customerPw}
+			,customer_bank = #{customerBank}
+			,customer_account = #{customerAccount}
+			,customer_bankowner = #{customerBankowner}
+			,loc_addr = #{locAddr}
+			,use_flag = #{useFlag}
+		WHERE customer_code = #{customerCode}
+
+	</update>
+
+	<!-- 판매 업체 delete (거래 'N' 처리) -->
+	<update id="deleteCustomer" parameterType="com.yedam.erp.items.CustomerVO">
+
+		UPDATE customers
+		SET use_flag = 'N'
+		WHERE customer_code = #{customerCode}
+	</update>
+
+	<select id="checkCustomerCode" parameterType="com.yedam.erp.items.CustomerVO">
+		SELECT customer_code 
+		FROM customers 
+		WHERE customer_code = #{customerCode}
+	</select>
+
+	<select id="loginCheck" resultType="String">
+		SELECT customer_owner AS customerOwner 
+		FROM customers
+		WHERE customer_code = #{customerCode} AND
+		customer_pw = #{customerPw}
+	</select>
+
+	<select id="viewCustomer" parameterType="com.yedam.erp.items.CustomerVO"  resultType="com.yedam.erp.items.CustomerVO">
+		SELECT customer_code AS customerCode,
+			customer_name AS customerName,
+			customer_owner AS customerOwner,
+			customer_loc AS customerLoc,
+			customer_bank AS customerBank,
+			customer_account AS customerAccount,
+			customer_bankowner AS customerBankowner,
+			use_flag,
+			loc_addr
+		FROM customers
+		WHERE customer_code = #{customerCode}
+		AND customer_pw = #{customerPw}
+	</select>
+
+	<!-- 판매업체 관리의 끝 -->
+
+	<!-- 여기서부터 판매업체 구매 요청 -->
+	<!-- 판매업체 구매 요청 정보 리스트 -->
+	<select id="getSales_tempList" resultType="com.yedam.erp.items.Sales_tempVO">
+
+		SELECT st.customer_code
+			,common.get_customer_name(st.customer_code) AS customer_name
+			,st.item_code
+			,common.get_item_name(st.item_code) AS item_name
+			,st.request_qty
+			,st.need_date
+			,st.create_date
+			,st.phone
+			,st.delivery_addr
+			,st.custom_seq
+		FROM sales_temp st
+		WHERE 1 = 1
+		AND customer_code = #{customerCode}
+		ORDER BY st.item_code
+
+	</select>
+
+	<!-- JqGrid 클릭 이벤트시 가져올 판매업체 구매목록 중 한 개의 정보 -->
+	<select id="getSales_temp" resultType="com.yedam.erp.items.Sales_tempVO">
+
+		SELECT customer_code
+			,item_code
+			,request_qty
+			,delivery_addr
+			,need_date
+			,create_date
+		FROM Sales_temp
+		WHERE customer_code = #{customerCode}
+
+	</select>
+
+	<!-- 판매업체 가입 -->
+	<insert id="insertSales_temp" parameterType="com.yedam.erp.items.Sales_tempVO">
+		<![CDATA[
+		insert into Sales_temp (customer_code
+							      ,item_code
+							      ,request_qty
+							      ,need_date
+							      ,create_date
+							      ,delivery_addr
+							      ,phone 
+							      ,custom_seq) 
+				      
+				      values (#{customerCode}    
+                          	 ,#{itemList}      
+                             ,#{requestQty}      
+                             ,#{needDate} + 10/24
+                             ,sysdate
+                             ,#{deliveryAddr}
+                             ,#{phone}
+                             ,SALE_TEMP_SEQ.nextval
+                             )
+		
+		]]>
+	</insert>
+
+	<!-- 판매업체 수정 -->
+	<update id="updateSales_temp" parameterType="com.yedam.erp.items.Sales_tempVO">
+
+		UPDATE Sales_temp
+		SET customer_owner = #{customerOwner}
+			,customer_loc = #{customerLoc}
+			,request_qty = #{requestQty}
+			,need_date = #{needDate}
+			,create_date = #{createDate}
+		WHERE customer_code = #{customerCode}
+
+	</update>
+
+	<!-- delete (구매코드 삭제 처리) -->
+	<delete id="deleteSales_temp" parameterType="com.yedam.erp.items.Sales_tempVO">
+
+		DELETE FROM Sales_temp
+		WHERE to_char(custom_seq) = #{customSeq}
+	</delete>
+
+	<!-- <select id="item_group1" parameterType="com.yedam.erp.items.Sales_tempVO"> 
+		대분류 SELECT lv.descriptions ,lv.lookup_code FROM lookups lk ,lookup_values 
+		lv WHERE lk.lookup = lv.lookup AND lk.lookup = 'ITEM_GROUP1'; </select> <select 
+		id="item_group2" parameterType="string" resultType="com.yedam.erp.items.Sales_tempVO"> 
+		중분류 SELECT lv.descriptions ,lv.lookup_code ,lv.dff FROM lookups lk ,lookup_values 
+		lv WHERE lk.lookup = lv.lookup AND lk.lookup = 'ITEM_GROUP2' AND lv.dff = 
+		'O'; </select> <select id="item_group3" parameterType="string" resultType="com.yedam.erp.items.Sales_tempVO"> 
+		소분류 SELECT lv.descriptions ,lv.lookup_code ,lv.dff FROM lookups lk ,lookup_values 
+		lv WHERE lk.lookup = lv.lookup AND lk.lookup = 'ITEM_GROUP3' AND lv.dff = 
+		'G'; </select> -->
+
+	<!-- <select id="item_group" parameterType="string" resultType="com.yedam.erp.items.Sales_tempVO"> 
+		SELECT * FROM items </select> -->
+
+
+
+
+</mapper>

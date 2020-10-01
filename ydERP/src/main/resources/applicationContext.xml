@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+
+	<!-- 생성자 방식 -->
+	<!-- <bean id="samsung" class="polymorphism.SamsungTV" init-method="initMethod"
+		lazy-init="true" scope="prototype">
+		<constructor-arg ref="speaker"></constructor-arg>
+		<constructor-arg value="2000"></constructor-arg>
+	</bean>
+	<bean id="lg" class="polymorphism.LgTV"></bean>
+	<bean id="speaker" class="polymorphism.SonySpeaker"></bean> -->
+
+	<!-- setter 인젝션 방식 -->
+	<!-- <bean id="samsung" class="polymorphism.SamsungTV">
+		<property name="speaker" ref="sony"></property>
+		<property name="price" value="2500"></property>
+	</bean>
+	<bean id="sony" class="polymorphism.SonySpeaker"></bean>
+	<bean id="apple" class="polymorphism.SonySpeaker"></bean> -->
+
+	<!-- <bean id="samsung" class="polymorphism.SamsungTV" p:price="5000" p:speaker-ref="sony"></bean> -->
+	<!-- <bean id="samsung" class="polymorphism.LgTV"  ></bean> -->
+	<!-- <bean id="sony" class="polymorphism.SonySpeaker"></bean> -->
+	
+	<!-- <bean id="collectionBean" class="polymorphism.CollectionBean" >
+		<property name="addressList">
+			<list>
+				<value>서울</value>
+				<value>대전</value>
+				<value>부산</value>
+			</list>
+		</property>
+	</bean> -->
+	
+	<context:component-scan base-package="polymorphism com"></context:component-scan>
+</beans>

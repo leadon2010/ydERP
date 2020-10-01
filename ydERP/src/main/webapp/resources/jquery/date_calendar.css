@@ -1,0 +1,17 @@
+@charset "utf-8";
+
+.ui-datepicker {width:100% !important;font-size:20px !important;font-family:'Nanum Gothic','나눔고딕' !important;}
+.ui-datepicker .ui-datepicker-header {background-image:none !important;background-color:#ffffff !important;border:0 !important;}
+.ui-datepicker th {font-size:15px !important;border-top:1px solid #ddd !important;border-bottom:1px solid #ddd !important;}
+.ui-datepicker td {border:0 !important;padding:1px !important;background-color:#ffffff !important; }
+.ui-datepicker td span, .ui-datepicker td a {font-size:18px !important;text-align:center !important;background-image:none !important;background-color:#ffffff !important;border:0 !important;}
+
+.ui-datepicker-week-end:first-child a { color: red; } 
+.ui-datepicker-week-end:last-child a { color: blue; } 
+
+
+.highlight_es a.ui-state-default {
+background: #BFE1E5 !important;
+color:#555 !important;
+font-weight:bold !important;
+}
