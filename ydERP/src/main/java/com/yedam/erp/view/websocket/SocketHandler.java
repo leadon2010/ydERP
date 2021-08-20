@@ -2,7 +2,7 @@ package com.yedam.erp.view.websocket;
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.annotation.Resource;
+//import javax.annotation.Resource;
 //import org.apache.log4j.LogManager;
 //import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
