@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
@@ -10,25 +10,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet"
-	href="https://www.w3schools.com/lib/w3-theme-black.css">
-<link rel="stylesheet"
-	href="https://fonts.googleapis.com/css?family=Roboto">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
-html, body, h1, h2, h3, h4, h5, h6 {
-	font-family: "Roboto", sans-serif;
-}
+	html,
+	body,
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-family: "Roboto", sans-serif;
+	}
 
-.w3-sidebar {
-	z-index: 3;
-	width: 250px;
-	top: 43px;
-	bottom: 0;
-	height: inherit;
-}
+	.w3-sidebar {
+		z-index: 3;
+		width: 250px;
+		top: 43px;
+		bottom: 0;
+		height: inherit;
+	}
 </style>
+
 <body>
 	<!-- Navbar -->
 	<div class="w3-top">
@@ -38,12 +43,10 @@ html, body, h1, h2, h3, h4, h5, h6 {
 	</div>
 
 	<!-- Sidebar -->
-	<nav
-		class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left"
-		id="mySidebar">
+	<nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme-l5 w3-animate-left" id="mySidebar">
 		<a href="javascript:void(0)" onclick="w3_close()"
-			class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large"
-			title="Close Menu"> <i class="fa fa-remove"></i>
+			class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu"> <i
+				class="fa fa-remove"></i>
 		</a>
 		<h4 class="w3-bar-item">
 			<tiles:insertAttribute name="menu" />
@@ -55,8 +58,8 @@ html, body, h1, h2, h3, h4, h5, h6 {
 	</nav>
 
 	<!-- Overlay effect when opening sidebar on small screens -->
-	<div class="w3-overlay w3-hide-large" onclick="w3_close()"
-		style="cursor: pointer" title="close side menu" id="myOverlay"></div>
+	<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor: pointer" title="close side menu"
+		id="myOverlay"></div>
 
 	<!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
 	<div class="w3-main" style="margin-left: 250px">
@@ -81,8 +84,7 @@ html, body, h1, h2, h3, h4, h5, h6 {
 
 			<div class="w3-container w3-theme-l1">
 				<p>
-					Powered by <a href="https://www.w3schools.com/w3css/default.asp"
-						target="_blank">w3.css</a>
+					Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a>
 				</p>
 			</div>
 		</footer>
@@ -116,6 +118,5 @@ html, body, h1, h2, h3, h4, h5, h6 {
 	</script>
 
 </body>
+
 </html>
-
-

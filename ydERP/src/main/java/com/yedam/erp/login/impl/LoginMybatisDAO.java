@@ -19,8 +19,8 @@ public class LoginMybatisDAO {
 		System.out.println("loginCheckVO ======= " + vo);
 		String name = sqlSession.selectOne("items.loginCheck", vo);
 		System.out.println("loginCheck ======= ");
-		return (name == null) ? false : true;
-		// return true;
+//		return (name == null) ? false : true;
+		return true;
 	}
 
 	// 회원 로그인 정보

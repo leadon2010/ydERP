@@ -1,10 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
-<li><a href="#"><i class="fa fa-shopping-cart fa-fw"></i> 备概沥焊<span
-		class="fa arrow"></span></a> 
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<li><a href="#"><i class="fa fa-shopping-cart fa-fw"></i> 甑Г鞝曤炒<span class="fa arrow"></span></a>
 	<ul class="nav nav-second-level">
-		<li><a href="getPurchaseRequestList">备概夸没积己</a></li>
-		<li><a href="getPurchaseRequesting">备概夸没铰牢</a></li>
-		<li><a href="getPurchasesPage">备概沥焊炼雀</a></li>
-		<li><a href="getPurchaseReceipting">备概涝绊贸府</a></li>
-	</ul> <!-- /.nav-second-level --></li>
+		<li><a href="getPurchaseRequestList">甑Г鞖旍箔靸濎劚</a></li>
+		<li><a href="getPurchaseRequesting">甑Г鞖旍箔鞀轨澑</a></li>
+		<li><a href="getPurchasesPage">甑Г鞝曤炒臁绊殞</a></li>
+		<li><a href="getPurchaseReceipting">甑Г鞛呹碃觳橂Μ</a></li>
+	</ul> <!-- /.nav-second-level -->
+</li>

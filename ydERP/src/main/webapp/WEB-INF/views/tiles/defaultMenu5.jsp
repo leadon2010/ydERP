@@ -1,7 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
-<li><a href="#"><i class="fa fa-truck fa-fw"></i> ╧Х╪ша╓╨╦<span
-		class="fa arrow"></span></a>
-		<ul class="nav nav-second-level">
-		<li><a href="./getDeliveryMap">╧Х╪ша╓╨╦а╤х╦</a></li>
-		</ul> 
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<li><a href="#"><i class="fa fa-truck fa-fw"></i> К╟╟Л├║Л═∙КЁ╢<span class="fa arrow"></span></a>
+	<ul class="nav nav-second-level">
+		<li><a href="./getDeliveryMap">К╟╟Л├║Л═∙КЁ╢Л║╟М ▄</a></li>
+	</ul>

@@ -49,9 +49,148 @@
 			$('#calendar').fullCalendar({
 				editable: true,
 				lang: "ko",
-				events: []
+				events: [{
+						title: '이창호',
+						start: '2018-04-02',
+						end: '2018-04-07',
+						color: 'black'
+					},
+					{
+						title: '이창호',
+						start: '2018-04-09',
+						end: '2018-04-14',
+						color: 'black'
+					},
+					{
+						title: '이창호',
+						start: '2018-04-16',
+						end: '2018-04-21',
+						color: 'black'
+					},
+					{
+						title: '이창호',
+						start: '2018-04-23',
+						end: '2018-04-28',
+						color: 'black'
+					},
+					{
+						title: '이창호',
+						start: '2018-04-30',
+						end: '2018-05-05',
+						color: 'black'
+					},
+					{
+						title: '김일희',
+						start: '2018-04-03',
+						end: '2018-04-08',
+						color: 'green'
+					},
+					{
+						title: '김일희',
+						start: '2018-04-10',
+						end: '2018-04-15',
+						color: 'green'
+					},
+					{
+						title: '김일희',
+						start: '2018-04-17',
+						end: '2018-04-22',
+						color: 'green'
+					},
+					{
+						title: '김일희',
+						start: '2018-04-24',
+						end: '2018-04-29',
+						color: 'green'
+					},
+					{
+						title: '이재완',
+						start: '2018-04-02',
+						end: '2018-04-06',
+						color: 'grey'
+					},
+					{
+						title: '이재완',
+						start: '2018-04-08',
+						color: 'grey'
+					},
+					{
+						title: '이재완',
+						start: '2018-04-09',
+						end: '2018-04-13',
+						color: 'grey'
+					},
+					{
+						title: '이재완',
+						start: '2018-04-15',
+						color: 'grey'
+					},
+					{
+						title: '이재완',
+						start: '2018-04-16',
+						end: '2018-04-20',
+						color: 'grey'
+					},
+					{
+						title: '이재완',
+						start: '2018-04-22',
+						color: 'grey'
+					},
+					{
+						title: '이재완',
+						start: '2018-04-23',
+						end: '2018-04-27',
+						color: 'grey'
+					},
+					{
+						title: '이재완',
+						start: '2018-04-29',
+						color: 'grey'
+					},
+					{
+						title: '이명철',
+						start: '2018-04-02'
+					},
+					{
+						title: '이명철',
+						start: '2018-04-05',
+						end: '2018-04-09'
+					},
+					{
+						title: '이명철',
+						start: '2018-04-09'
+					},
+					{
+						title: '이명철',
+						start: '2018-04-12',
+						end: '2018-04-16'
+					},
+					{
+						title: '이명철',
+						start: '2018-04-16'
+					},
+					{
+						title: '이명철',
+						start: '2018-04-19',
+						end: '2018-04-23'
+					},
+					{
+						title: '이명철',
+						start: '2018-04-23'
+					},
+					{
+						title: '이명철',
+						start: '2018-04-26',
+						end: '2018-04-30'
+					}
+
+				]
 			});
 
+		});
+	</script>
+	<script>
+		$(function () {
 			var j;
 
 			$.ajax({
@@ -122,9 +261,8 @@
 					console.log(bubbleChartData);
 
 					// 차트를 그릴 위치의 태그 ID를 받아온다.
-					var bubbleChart = new google.visualization.BubbleChart(
-						document.getElementById('bubbleChartDiv')
-					);
+					var bubbleChart = new google.visualization.BubbleChart(document.getElementById(
+						'bubbleChartDiv'));
 
 					// 차트를 그린다.
 					bubbleChart.draw(google.visualization.arrayToDataTable(bubbleChartData), bubbleChartOptions);

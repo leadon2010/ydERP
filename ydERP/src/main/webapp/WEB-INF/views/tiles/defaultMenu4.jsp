@@ -1,11 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
-<li><a href="#"><i class="fa fa-pencil fa-fw"></i> Àç°íÁ¤º¸<span
-		class="fa arrow"></span></a>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<li><a href="#"><i class="fa fa-pencil fa-fw"></i> ìž¬ê³ ì •ë³´<span class="fa arrow"></span></a>
 	<ul class="nav nav-second-level">
-		<li><a href="getStockOnhandList">Àç°íÁ¶È¸</a></li>
-		<li><a href="getStockOnhandList2">Àç°í ¹× ÀÔÃâ°í Á¶È¸</a></li>
-		<li><a href="getStockInOutList">ÀÔ/Ãâ°íÁ¶È¸</a></li>
-		<li><a href="getCharts">Ã­Æ® Åë°è ÀÚ·á</a></li>
-		<li><a href="getLookups">Lookup °ü¸®</a></li>
-	</ul></li>
+		<li><a href="getStockOnhandList">ìž¬ê³ ì¡°íšŒ</a></li>
+		<li><a href="getStockOnhandList2">ìž¬ê³  ë° ìž…ì¶œê³  ì¡°íšŒ</a></li>
+		<li><a href="getStockInOutList">ìž…/ì¶œê³ ì¡°íšŒ</a></li>
+		<li><a href="getCharts">ì± íŠ¸ í†µê³„ ìžë£Œ</a></li>
+		<li><a href="getLookups">Lookup ê´€ë¦¬</a></li>
+	</ul>
+</li>
