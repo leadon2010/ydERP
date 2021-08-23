@@ -192,8 +192,9 @@
 				success: function (datas) {
 					$("#pGroup2 option:gt(0)").remove();
 					for (i = 0; i < datas.length; i++) {
-						$("#pGroup2").append("<option value='" + datas[i].lookupCode + "'>" + datas[i]
-							.lookupValues + "</option>")
+						$("#pGroup2").append(
+							"<option value='" + datas[i].lookupCode + "'>" + datas[i].lookupValues +
+							"</option>")
 						//vgrp2 += ";" + datas[i].lookupCode + ":" + datas[i].lookupValues;
 						console.dir(vgrp2);
 					}
@@ -213,8 +214,9 @@
 				success: function (datas) {
 					$("#pGroup3 option:gt(0)").remove();
 					for (i = 0; i < datas.length; i++) {
-						$("#pGroup3").append("<option value='" + datas[i].lookupCode + "'>" + datas[i]
-							.lookupValues + "</option>")
+						$("#pGroup3").append(
+							"<option value='" + datas[i].lookupCode + "'>" + datas[i].lookupValues +
+							"</option>")
 						//vgrp3 += ";" + datas[i].lookupCode + ":" + datas[i].lookupValues;
 						console.dir(vgrp3);
 					}
