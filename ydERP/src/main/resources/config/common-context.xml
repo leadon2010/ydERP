@@ -31,8 +31,7 @@
 	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver"
 		p:order="2" p:viewClass="org.springframework.web.servlet.view.tiles3.TilesView" />
 	<!--Don't add suffix or prefix like you do with .jsp files -->
-	<bean id="tilesConfigurer"
-		class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
 		<property name="definitions">
 			<value>/WEB-INF/tiles/tiles.xml</value>
 		</property>
@@ -41,14 +40,12 @@
 	<context:component-scan base-package="com.yedam.erp" />
 
 	<!-- MultipartResolver 설정 -->
-	<bean id="multipartResolver"
-		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="maxUploadSize" value="100000000" />
 		<property name="maxInMemorySize" value="100000000" />
 	</bean>
 
-	<bean id="messageSource"
-		class="org.springframework.context.support.ResourceBundleMessageSource">
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basenames">
 			<list>
 				<value>message.messageSource</value>
@@ -56,8 +53,7 @@
 		</property>
 	</bean>
 
-	<bean id="localeResolver"
-		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
 
 	</bean>
 	<mvc:interceptors>
@@ -71,8 +67,7 @@
 	<bean id="myHandler" class="com.yedam.erp.view.websocket.SocketHandler" />
 
 	<websocket:handlers>
-		<websocket:mapping path="/websocket/broadcast.do"
-			handler="myHandler" />
+		<websocket:mapping path="/websocket/broadcast.do" handler="myHandler" />
 	</websocket:handlers>
 
 	<mvc:interceptors>

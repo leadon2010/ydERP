@@ -18,8 +18,7 @@
 		</tx:attributes>
 	</tx:advice>
 	<aop:config>
-		<aop:pointcut expression="execution(* com.yedam.erp..*Impl.*(..))" 
-		     id="allpointcut"/>
+		<aop:pointcut expression="execution(* com.yedam.erp..*Impl.*(..))"  id="allpointcut"/>
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="allpointcut"/>
 	</aop:config> 
 
