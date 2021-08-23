@@ -8,11 +8,11 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
 
-	<!-- DispatcherServlet Context: defines this servlet's request-processing 
-		infrastructure -->
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<mvc:annotation-driven />
+
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources in the ${webappRoot}/resources directory -->
 	<mvc:resources mapping="/resources/**" location="/resources/" />
@@ -24,12 +24,12 @@
 		> <property name="prefix" value="/WEB-INF/views/" /> <property name="suffix" 
 		value=".jsp" /> </bean> -->
 
-	<bean p:order="1"
-		class="org.springframework.web.servlet.view.BeanNameViewResolver" />
+	<bean p:order="1" class="org.springframework.web.servlet.view.BeanNameViewResolver" />
 
 
-	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver"
-		p:order="2" p:viewClass="org.springframework.web.servlet.view.tiles3.TilesView" />
+	<bean p:order="2" class="org.springframework.web.servlet.view.UrlBasedViewResolver" 
+	      p:viewClass="org.springframework.web.servlet.view.tiles3.TilesView" />
+
 	<!--Don't add suffix or prefix like you do with .jsp files -->
 	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
 		<property name="definitions">
@@ -56,6 +56,7 @@
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
 
 	</bean>
+
 	<mvc:interceptors>
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
 			<property name="paramName" value="lang" />
@@ -63,7 +64,6 @@
 	</mvc:interceptors>
 
 	<!-- websocket -->
-
 	<bean id="myHandler" class="com.yedam.erp.view.websocket.SocketHandler" />
 
 	<websocket:handlers>

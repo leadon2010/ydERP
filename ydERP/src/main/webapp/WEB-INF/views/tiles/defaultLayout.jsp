@@ -61,8 +61,7 @@
 
 	<script>
 		var title_nav = ""
-	</script>
-	<script>
+
 		function logoutcheck() {
 			location.href = 'logout';
 		}
@@ -118,13 +117,14 @@
 		<div id="chat">
 			Live Q&A
 			<div id="chatlogin">
-				상호명<input type="text" id="nickname" onkeydown="enterlogin()" size="18"> <input type="button" value="입장"
-					onclick="login()">
+				상호명<input type="text" id="nickname" onkeydown="enterlogin()" size="18">
+				<input type="button" value="입장" onclick="login()">
 			</div>
 			<div id="chat-area">
 				<textarea id="messageWindow" rows="20" cols="33" readonly="readonly"></textarea>
-				<br /> <input id="inputMessage" type="text" onkeydown="enterkey()" size="13" /> <input type="button"
-					value="보내기" onclick="send()" />
+				<br />
+				<input id="inputMessage" type="text" onkeydown="enterkey()" size="13" />
+				<input type="button" value="보내기" onclick="send()" />
 				<input type="button" value="나가기" onclick="logout()" />
 			</div>
 
@@ -144,8 +144,7 @@
 			document.getElementById("chatlogin").style.display = "none";
 			document.getElementById("chat-area").style.display = "block";
 			clientID = document.getElementById("nickname").value;
-			webSocket = new WebSocket(
-				'ws://180.71.250.243/erp/websocket/broadcast.do');
+			webSocket = new WebSocket('ws://180.71.250.243/erp/websocket/broadcast.do');
 
 			webSocket.onerror = function (event) {
 				onError(event)
