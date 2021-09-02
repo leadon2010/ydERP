@@ -277,7 +277,8 @@
 	<insert id="insertCustomer" parameterType="com.yedam.erp.items.CustomerVO">
 		<![CDATA[
 		insert into customers (customer_code, customer_name, customer_owner, loc_addr,
-							   customer_loc, customer_phone, customer_pw, customer_bank, customer_account, customer_bankowner, use_flag) 
+							   customer_loc, customer_phone, customer_pw, customer_bank, 
+							   customer_account, customer_bankowner, use_flag) 
 				      values (#{customerCode}    
                           	 ,#{customerName}      
                              ,#{customerOwner}      

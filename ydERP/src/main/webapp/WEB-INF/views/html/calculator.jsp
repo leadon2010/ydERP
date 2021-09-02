@@ -90,15 +90,15 @@
                     oper = touchVal;
                 } else {
                     if (oper == '+') {
-                    	result = (firstVal + lastVal)
+                        result = (firstVal + lastVal)
                     } else if (oper == '-') {
-                    	result = (firstVal - lastVal)
+                        result = (firstVal - lastVal)
                     } else if (oper == '*') {
-                    	result = (firstVal * lastVal)
+                        result = (firstVal * lastVal)
                     } else if (oper == '/') {
-                    	result = (firstVal / lastVal)
+                        result = (firstVal / lastVal)
                     } else if (oper == '%') {
-                    	result = (firstVal % lastVal)
+                        result = (firstVal % lastVal)
                     }
                     firstVal = result;
                     lastVal = 0;
