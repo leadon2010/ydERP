@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>login form</title>
- 
+
     <!-- font awesome -->
     <link href="${pageContext.request.contextPath}/resources/vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
     <!-- Custom CSS -->
@@ -71,8 +71,8 @@
                         <form role="form" name="loginForm" id="loginForm" method="post" action="loginCheck">
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="아이디(사업자등록번호)" name="customerCode" id="customerCode"
-                                        type="text" onkeydown='javascript:jumptoPWbtn()' autofocus>
+                                    <input class="form-control" placeholder="아이디(사업자등록번호)" name="customerCode"
+                                        id="customerCode" type="text" onkeydown='javascript:jumptoPWbtn()' autofocus>
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" placeholder="비밀번호" name="customerPw" id="customerPw"
