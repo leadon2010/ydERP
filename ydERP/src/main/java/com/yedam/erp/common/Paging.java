@@ -81,8 +81,9 @@ public class Paging {
 
 	@Override
 	public String toString() {
-		return "Paging [pageUnit=" + pageUnit + ", pageSize=" + pageSize + ", totalPageCount=" + totalPageCount + ", totalRecord=" + totalRecord + ", page=" + page + ", startPage=" + startPage
-				+ ", endPage=" + endPage + ", first=" + first + ", last=" + last + "]";
+		return "Paging [pageUnit=" + pageUnit + ", pageSize=" + pageSize + ", totalPageCount=" + totalPageCount
+				+ ", totalRecord=" + totalRecord + ", page=" + page + ", startPage=" + startPage + ", endPage="
+				+ endPage + ", first=" + first + ", last=" + last + "]";
 	}
 
 }
